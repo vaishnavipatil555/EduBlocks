@@ -93,10 +93,21 @@ contract EDUContract {
     mapping(address => bool) public isOrganizationAdministrator;
     mapping(uint256 => Document) public documents;
 
+    uint256 public CollegeRequestIndex;
+    uint256 public OrganizationRequestIndex;
+    uint256 public DocumentIndex;
 
     address public owner;
 
     string public version = "0.0.1";
+
+    event eCollegeRequestAdd(uint256 indexed index, address sender);
+
+    event eCollegeRequestUpdate(uint256 indexed index, address sender);
+    
+    event eOrganizationRequestAdd(uint256 indexed index, address sender);
+
+    event eOrganizationRequestUpdate(uint256 indexed index, address sender);
 
     constructor() public {
         owner = msg.sender;
@@ -222,5 +233,137 @@ contract EDUContract {
         students[msg.sender].email = _email;
     }
     
+    function CollegeRequestAdd(
+        RequestStat _stat,
+        string memory _remark,
+        address _college,
+        string memory _docpath
+    ) public {
+        require(msg.sender == students[msg.sender].student);
+        require(isCollege[_college] == true);
+        CollegeRequestIndex++;
+        collegeRequests[CollegeRequestIndex] = CollegeRequest(
+            CollegeRequestIndex,
+            msg.sender,
+            now,
+            _stat,
+            _remark,
+            _college,
+            _docpath
+        );
+
+        emit eCollegeRequestAdd(CollegeRequestIndex, msg.sender);
+    }
+
+    function CollegeRequestUpdate(
+        uint256 _CollegeRequestIndex,
+        RequestStat _stat,
+        string memory _remark,
+        address _college
+    ) public {
+        require(_CollegeRequestIndex > 0);
+        require(_CollegeRequestIndex <= CollegeRequestIndex);
+
+        collegeRequests[_CollegeRequestIndex].stat = _stat;
+        collegeRequests[_CollegeRequestIndex].remark = _remark;
+        emit eCollegeRequestUpdate(_CollegeRequestIndex, msg.sender);
+    }
+
+    function CollegeRequestGet() public view returns (uint256[] memory) {
+        uint256[] memory results;
+        uint256 count;
+        for (uint256 i = 1; i <= CollegeRequestIndex; i++) {
+            if (collegeRequests[i].student == msg.sender) {
+                results[count] = i;
+                count++;
+            }
+        }
+        return results;
+    }
+
+    function OrganizationRequestAdd(
+        RequestStat _stat,
+        string memory _remark,
+        address _organization,
+        string memory _docpath
+    ) public {
+        require(msg.sender == students[msg.sender].student);
+        require(isOrganization[_organization] == true);
+        OrganizationRequestIndex++;
+        organizationRequests[OrganizationRequestIndex] = OrganizationRequest(
+            OrganizationRequestIndex,
+            msg.sender,
+            now,
+            _stat,
+            _remark,
+            _organization,
+            _docpath
+        );
+
+        emit eOrganizationRequestAdd(OrganizationRequestIndex, msg.sender);
+    }
+
+    function OrganizationRequestUpdate(
+        uint256 _OrganizationRequestIndex,
+        RequestStat _stat,
+        string memory _remark,
+        address _organization
+    ) public {
+        require(_OrganizationRequestIndex > 0);
+        require(_OrganizationRequestIndex <= OrganizationRequestIndex);
+
+        organizationRequests[_OrganizationRequestIndex].stat = _stat;
+        organizationRequests[_OrganizationRequestIndex].remark = _remark;
+        emit eOrganizationRequestUpdate(_OrganizationRequestIndex, msg.sender);
+    }
+
+    function OrganizationRequestGet() public view returns (uint256[] memory) {
+        uint256[] memory results;
+        uint256 count;
+        for (uint256 i = 1; i <= OrganizationRequestIndex; i++) {
+            if (organizationRequests[i].student == msg.sender) {
+                results[count] = i;
+                count++;
+            }
+        }
+        return results;
+    }
+
+    function DocumentAdd(
+        address _student,
+        DocSender _sender,
+        string memory _docname,
+        string memory _docpath,
+        string memory _docdesc
+    ) public {
+        if(_sender == DocSender.CLG){
+            require(msg.sender == colleges[msg.sender].Id);
+        }
+        else{
+            require(msg.sender == organizations[msg.sender].Id);
+        }       
+
+        DocumentIndex++;
+        documents[DocumentIndex] = Document(
+            DocumentIndex,
+            msg.sender,
+            _student,
+            _sender,
+            _docname,
+            _docpath,
+            _docdesc,
+            true
+        );
+
+        students[_student].document.push(DocumentIndex);
+    }
+
+    function DocumentGet(address _addr)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return students[_addr].document;
+    }
 
 }
