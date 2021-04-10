@@ -260,16 +260,10 @@ App = {
           $("#sex").val(student[3].toNumber());
           $("#marital").val(student[4].toNumber());
           $("#email").val(student[5]);
-  
-          //patientdetails
-          //return EMRInstance.patientdetails(App.account);
         }); 
     },
   
     LoadSignupPage: function () {
-      //$(this).parent().addClass('active');
-      //console.log($(this).parent());
-  
       $("#content").load("ProfileEdit.html", function () {
         $("#sliderbarContainer").load("SliderbarContainer.html");
   
@@ -297,8 +291,6 @@ App = {
       const _sex = $("#sex").find(":selected").val();
       const _marital = $("#marital").find(":selected").val();
       const _email = $("#email").val();
-      //console.log(">>>> Just hit me! " + $('#fullname').val());
-  
       App.loaderShow(true);
   
       App.contracts.EDU.deployed()
@@ -316,6 +308,141 @@ App = {
         .then((recipt) => {
           console.log("Update successfully.");
           App.LoadDefaultPage();
+        });
+    },
+
+    SignupStudent: function () {
+      const _fullname = $("#fullname").val();
+      const _dob = $("#dob").val();
+      const _sex = $("#sex").find(":selected").val();
+      const _marital = $("#marital").find(":selected").val();
+      const _email = $("#email").val();
+      const ReportDocsArray = [0];
+  
+      App.loaderShow(true);
+  
+      App.contracts.EDU.deployed()
+        .then(function (instance) {
+          EDUInstance = instance;
+          
+          return EDUInstance.SignupStudent(
+            _fullname,
+            _dob,
+            _sex,
+            _marital,
+            _email,
+            ReportDocsArray,
+            { from: App.account }
+          );
+        })
+        .then((recipt) => {
+          console.log("Saved successfully.");
+          App.LoadDefaultPage();
+        })
+        .catch((error) => {
+          console.log(error.message);
+          App.loaderShow(false);
+        });
+    },
+  
+    /** ADMINISTRATOR ACTIONS */
+  
+    AdministratorAction: function () {
+      const accountHash = $("#adminAccountHash").val();
+      const _name = $("#fullname").val();
+      const _address = $("#address").val();
+      const _adminType = $("#adminType").find(":selected").val();
+      const _email = $("#email").val();
+      App.loaderShow(true);
+  
+      App.contracts.EDU.deployed()
+        .then(function (instance) {
+          EDUInstance = instance;
+          if(_adminType == 0){
+            return EDUInstance.SetCollegeAdministrator(
+                accountHash,
+                _name,
+                _address,
+                _email,
+                { from: App.account }
+              );            
+          }
+          else{
+            return EDUInstance.SetOrganizationAdministrator(
+                accountHash,
+                _name,
+                _address,
+                _email,
+                { from: App.account }
+              );           
+          }
+        })
+          
+        .then((result) => {
+          console.log("working...");
+          console.log(result);
+          App.LoadDefaultPage();
+        })
+        .catch((error) => {
+          console.log("error...");
+          console.log(error);
+        });
+    },
+
+    CollegeAdministratorAction: function () {
+      const accountHash = $("#adminAccountHash").val();
+      const _name = $("#name").val();
+      const _address = $("#address").val();
+      const _email = $("#email").val();
+      App.loaderShow(true);    
+      App.contracts.EDU.deployed()
+        .then(function (instance) {
+          EDUInstance = instance;
+          return EDUInstance.SetCollege(
+                accountHash,
+                _name,
+                _address,
+                _email,
+                { from: App.account }
+          );  
+        })
+          
+        .then((result) => {
+          console.log("working...");
+          console.log(result);
+          App.LoadDefaultPage();
+        })
+        .catch((error) => {
+          console.log("error...");
+          console.log(error);
+        });
+    },
+    OrgAdministratorAction: function () {
+      const accountHash = $("#adminAccountHash").val();
+      const _name = $("#name").val();
+      const _address = $("#address").val();
+      const _email = $("#email").val();
+      App.loaderShow(true);    
+      App.contracts.EDU.deployed()
+        .then(function (instance) {
+          EDUInstance = instance;
+          return EDUInstance.SetOrganization(
+                accountHash,
+                _name,
+                _address,
+                _email,
+                { from: App.account }
+          );  
+        })
+          
+        .then((result) => {
+          console.log("working...");
+          console.log(result);
+          App.LoadDefaultPage();
+        })
+        .catch((error) => {
+          console.log("error...");
+          console.log(error);
         });
     },
   
