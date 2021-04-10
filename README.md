@@ -7,6 +7,13 @@
 # EduBlocks
 
 ## Introduction:
+### Whats the problem?
+
+There is no single place for storing educational certificates digitally which is safe, secure, tamper-proof and acceptable everywhere.
+### Solution
+
+EduBlocks is a DApp for organisations, educational institutes and students based on ethereum blockchain where educational institutions can grant degree certificates and marksheets to students. These certificates are given to students and a hash of that file is maintained on the blockchain such that any tampering to certificate will be detected with ease. Students can further share these records to organisations like private companies, government, banks and anywhere which asks for education proof.
+
 
 ## Table of contents
 * [General Information](#general-information)
@@ -20,6 +27,8 @@
 * [System Design](#system-design)
 
 ## General Information
+
+Our solution is build on Ethereum Decentralised Applications (DApps) using Truffle suite, Metamask and Web3js.
 
 ## Technologies
 * NPM
@@ -96,8 +105,8 @@ $ truffle migrate --reset
   * Add network HTTP://localhost:7545 (This is where Ganache is running)
   * Import accounts from ganache
   * connect it to localhost:3000
-  * ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20account%20configuration.png)
-  * ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20accounts%20connection.png)
+  ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20account%20configuration.png)
+  ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20accounts%20connection.png)
 
 ## Usecase Diagram
 
