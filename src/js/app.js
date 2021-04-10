@@ -359,6 +359,7 @@ App = {
               _name,
               _address,
               _email,
+              _adminType,
               { from: App.account }
             );            
         }
@@ -368,6 +369,7 @@ App = {
               _name,
               _address,
               _email,
+              _adminType,
               { from: App.account }
             );           
         }
@@ -443,9 +445,131 @@ App = {
         });
     },
 
-  
   /*** REQUESTS  */
   
+  LoadRequestPageForOrganizationAdmin: function () {
+    let AppCount = 0;
+
+    $("#content").load("OrgRequest.html", function () {
+      $("#ScheduleNewCont").hide();
+      $("#sliderbarContainer").load("OrganizationSliderbarContainer.html");
+
+      $("#RequestCardContainer").empty();
+      App.contracts.EDU.deployed()
+        .then(function (instance) {
+          EDUInstance = instance;
+          return EDUInstance.OrganizationRequestIndex();
+        })
+        .then((reply) => {
+          AppCount = reply.toNumber();
+          console.log("in org")
+
+          let i = 1;
+    
+          while (i <= AppCount) {
+            EDUInstance.organizationRequests(i).then((request) => {
+              console.log("request4",request[4]);
+              const obj = request[4];
+              let str = '<div class="row">';
+              str += '<div class="col-lg-12">';
+              if (App.account == request[5]) {
+                  console.log(request[5]); 
+                  console.log(request[3].toNumber())
+                  if (request[3].toNumber() == 0) {
+                      console.log(request[3].toNumber())
+                    var date = new Date(request[2].toNumber());
+                      str += '<table>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Index: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[0] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Student Hash Code: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[1] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Status: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + App.CONST_REQUEST[request[3].toNumber()] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Remark: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[4] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document URL: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4><a href="' + request[6] + '">' + request[6] + '</a></h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document Description: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[7] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += '</table>' 
+                    let create = 1;
+                    let reject = 2;
+                    str +=
+                      '<button onclick="App.OrgRequestUpdate(' +
+                      request[0] +
+                      ", " +
+                      create +
+                      ",'" +
+                      request[4] +
+                      "', " +
+                      request[5] +
+                      ')" class="btn btn-primary pull-right">Accept</button>';
+                    str +=
+                      '<button onclick="App.OrgRequestUpdate(' +
+                      request[0] +
+                      ", " +
+                      reject +
+                      ",'" +
+                      request[4] +
+                      "', " +
+                      request[5] +
+                      ');" class="btn btn-primary pull-right">Cancel</button>';
+                      str +=
+                        '<button onclick="App.ReturnOrganizationDocuments(' +
+                        request[1] +
+                        ');" class="btn btn-primary pull-right">View Documents</button>';
+                  }
+              }
+              str += "</div>";
+                      str += "</div>";
+                      str += "<hr />";
+
+                      $("#RequestCardContainer").append(str);
+            });
+
+            i++;
+          
+          }
+          App.loaderShow(false);
+        });
+    });
+  },
   
   LoadRequestPageForCollegeAdmin: function () {
     let AppCount = 0;
@@ -570,28 +694,228 @@ App = {
     });
   },
   
-  LoadAllColleges: function () {
-      console.log("isCollegeAdmin", App.isCollegeAdministartor);
-      if (!App.isCollege) {
-        return;
-      }
+  ReturnCollegeDocuments: function (student) {
+      let AppCount = 0;
   
-      $("#content").load("AllAdminsView.html", function () {
-        $("#sliderbarContainer").load("CollegeAdminSliderbarContainer.html");
+      $("#content").load("ViewDocs.html", function () {
+        $("#ScheduleNewCont").hide();
+        $("#sliderbarContainer").load("CollegeSliderbarContainer.html");
+        $("#StudentHash").empty();
+        let hash = '<button onclick="App.LoadRequestPageForCollegeAdmin()" class="btn btn-primary pull-right">Back</button>';
+        
+        $("#StudentHash").append(hash);
+
+  
+        $("#RequestURLs").empty();
+        App.contracts.EDU.deployed()
+          .then(function (instance) {
+            EDUInstance = instance;
+            return EDUInstance.DocumentIndex();
+          })
+          .then((reply) => {
+            AppCount = reply.toNumber();
+  
+            let i = 1;
+              
+            while (i <= AppCount) {
+              EDUInstance.documents(i).then((request) => {
+                let str = '<div class="row">';
+                str += '<div class="col-lg-12">';
+                console.log(request[5]) 
+                console.log(student) 
+                if (student == request[2]) {
+                  str += '<h4><a href="' + request[5] + '">' + request[5] + '</a></h4>' 
+                  str += '<h4>Sent By: ' + request[1] + '</a></h4>'     
+                  console.log(request[5]) 
+                    
+                }
+                str += "</div>";
+                        str += "</div>";
+                        str += "<hr />";
+  
+                        $("#RequestURLs").append(str);
+              });
+  
+              i++;
+            
+            }
+            App.loaderShow(false);
+          });
       });
     },
 
-    LoadAllOrganizations: function () {
-      console.log("isOrgAdmin", App.isOrganizationAdministrator);
-      if (!App.isOrganization) {
-        return;
-      }
+    ReturnOrganizationDocuments: function (student) {
+      let AppCount = 0;
   
-      $("#content").load("AllAdminsView.html", function () {
-        $("#sliderbarContainer").load("OrgAdminSliderbarContainer.html");
+      $("#content").load("ViewDocs.html", function () {
+        $("#ScheduleNewCont").hide();
+        $("#sliderbarContainer").load("OrganizationSliderbarContainer.html");
+        $("#StudentHash").empty();
+        let hash = '<button onclick="App.LoadRequestPageForOrganizationAdmin()" class="btn btn-primary pull-right">Back</button>';
+        
+        $("#StudentHash").append(hash);
+
+        console.log("res.........")
+        $("#RequestURLs").empty();
+        App.contracts.EDU.deployed()
+          .then(function (instance) {
+            EDUInstance = instance;
+            return EDUInstance.DocumentIndex();
+          })
+          .then((reply) => {
+            AppCount = reply.toNumber();
+  
+            let i = 1;
+              
+            while (i <= AppCount) {
+              EDUInstance.documents(i).then((request) => {
+                let str = '<div class="row">';
+                str += '<div class="col-lg-12">';
+                console.log(request[5]) 
+                console.log(student) 
+                if (student == request[2]) {
+                  str += '<h4><a href="' + request[5] + '">' + request[5] + '</a></h4>' 
+                  str += '<h4>Sent By: ' + request[1] + '</a></h4>'     
+                  console.log(request[5]) 
+                    
+                }
+                str += "</div>";
+                        str += "</div>";
+                        str += "<hr />";
+  
+                        $("#RequestURLs").append(str);
+              });
+  
+              i++;
+            
+            }
+            App.loaderShow(false);
+          });
       });
     },
 
+  LoadRequestPageForOrgAdmin: function () {
+      let AppCount = 0;
+  
+      $("#content").load("OrgRequest.html", function () {
+        $("#ScheduleNewCont").hide();
+        $("#sliderbarContainer").load("OrganizationSliderbarContainer.html");
+  
+        $("#RequestCardContainer").empty();
+        App.contracts.EDU.deployed()
+          .then(function (instance) {
+            EDUInstance = instance;
+            return EDUInstance.OrganizationRequestIndex();
+          })
+          .then((reply) => {
+            AppCount = reply.toNumber();
+  
+  
+            let i = 1;
+      
+            while (i <= AppCount) {
+              EDUInstance.organizationRequests(i).then((request) => {
+                  console.log(request[4])
+                const obj = request[4];
+                let str = '<div class="row">';
+                str += '<div class="col-md-3">';
+                if (App.account == request[5]) {
+                    console.log(request[5]); 
+                    console.log(request[3].toNumber())
+                    if (request[3].toNumber() == 0) {
+                        console.log(request[3].toNumber())
+                      const r = obj["rep"]; 
+                      const m = obj["msg"]; 
+                      var date = new Date(request[2].toNumber());
+                      str += '<table>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Index: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[0] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Student Hash Code: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[1] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Status: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + App.CONST_REQUEST[request[3].toNumber()] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Remark: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[4] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document URL: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4><a href="' + request[6] + '">' + request[6] + '</a></h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document Description: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[7] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += '</table>'
+                      let create = 1;
+                      let reject = 2;
+                      str +=
+                        '<button onclick="App.OrgRequestUpdate(' +
+                        request[0] +
+                        ", " +
+                        create +
+                        ",'" +
+                        request[4] +
+                        "', " +
+                        request[5] +
+                        ')" class="btn btn-primary pull-right">Accept</button>';
+                      str +=
+                        '<button onclick="App.OrgRequestUpdate(' +
+                        request[0] +
+                        ", " +
+                        reject +
+                        ",'" +
+                        request[4] +
+                        "', " +
+                        request[5] +
+                        ');" class="btn btn-primary pull-right">Cancel</button>';
+                    }
+                }
+                str += "</div>";
+                        str += "</div>";
+                        str += "<hr />";
+  
+                        $("#RequestCardContainer").append(str);
+              });
+  
+              i++;
+            }
+            App.loaderShow(false);
+          });
+      });
+    },
+  
+    
   LoadCollegeRequestPage: function () {
     console.log("is Student", App.isStudent);
     if (!App.isStudent) {
@@ -695,6 +1019,109 @@ App = {
     });
   },
 
+  
+  LoadOrgRequestPage: function () {
+      console.log("is Student", App.isStudent);
+      if (!App.isStudent) {
+        return;
+      }
+  
+      let AppCount = 0;
+  
+      $("#content").load("OrgRequest.html", function () {
+        $("#sliderbarContainer").load("OrganizationSliderbarContainer.html");
+  
+        $("#RequestCardContainer").empty();
+  
+        App.contracts.EDU.deployed()
+          .then(function (instance) {
+            EDUInstance = instance;
+            return EDUInstance.DocumentGet(App.account);
+          })
+          .then((reply) => {
+            let DocCount = reply.length;
+            let j = 1;
+            let loaded_j = 1;
+            let str = '<label class="bmd-label-floating">Select Document:</label>';
+            str += '<select id="reportList" class="form-control">';
+            while (j < DocCount) {
+              EDUInstance.documents(reply[j].toNumber()).then((result) => {
+                str +=
+                  '<option value="' + result[4] + '">' + result[0] + "</option>";
+  
+                if (DocCount == loaded_j + 1) {
+                  str += "</select>";
+                  $("#reportList").empty();
+                  $("#reportList").append(str);
+                } else {
+                  loaded_j++;
+                }
+              });
+              j++;
+            }
+            console.log("Complete Loading Docs List");
+            return EDUInstance.OrganizationRequestIndex();
+          })
+          .then((reply) => {
+            AppCount = reply.toNumber();
+  
+            let i = 1;
+  
+            while (i <= AppCount) {
+              console.log("Appcount", AppCount);
+              EDUInstance.organizationRequests(i).then((request) => {
+                console.log(request[4]);
+                if (request[1] == App.account) {
+                  console.log("student matched...");
+                  const obj = JSON.parse(request[4]);
+                  var date = new Date(request[2].toNumber());
+                  let str = '<div class="row">';
+  
+                  if (obj["rep"]) {
+                    EDUInstance.documents(obj["rep"])
+                      .then((report) => {
+                        console.log(report);
+                        str += '<div class="col-md-3">';
+                        str +=
+                          '<a href="' +
+                          report[1] +
+                          '" target="blank"><img src="' +
+                          report[1] +
+                          '" width="100" height="100"></a>';
+                        str += "</div>";
+                        str += '<div class="col-md-9">';
+  
+                        str += "Date & Time: " + date.toLocaleString();
+                        str += "<br />Message: " + obj["msg"];
+                        str +=
+                          "<br />Status: " +
+                          App.CONST_REQUEST[request[3].toNumber()];
+  
+                        if (request[3].toNumber() == 4) {
+                          str += "<br/>Remark: " + obj["pre"];
+                          str += "<br/>";
+                        }
+                        
+                        str += "</div>";
+                        str += "</div>";
+                        str += "<hr />";
+  
+                        $("#RequestCardContainer").append(str);
+                      })
+                      .catch((error) => {
+                        console.log("Error loading report. ", error);
+                      });
+                  }
+                }
+              });
+  
+              i++;
+            }
+            App.loaderShow(false);
+          });
+      });
+    },
+
     LoadStudentRequestPage: function () {
       console.log("is Student", App.isStudent);
       if (!App.isStudent) {
@@ -707,9 +1134,108 @@ App = {
       $("#content").load("StudentRequest.html", function () {
         $("#sliderbarContainer").load("SliderbarContainer.html");
   
+        $("#RequestCardContainer").empty();
         $("#ClgRequestCardContainer").empty();
         
-         App.contracts.EDU.deployed()
+  
+        App.contracts.EDU.deployed()
+          .then(function (instance) {
+              EDUInstance = instance;
+              return EDUInstance.OrganizationRequestIndex();
+          })
+          
+          .then((reply) => {
+              console.log("Hello", reply);
+              AppCount = reply['c'][0];
+  
+            console.log("==> " + AppCount);
+  
+            let i = AppCount;
+  
+            while (i >= 1) {
+              console.log("Appcount", AppCount);
+              EDUInstance.organizationRequests(i).then((request) => {
+                console.log(request[4]);
+                if (request[1] == App.account) {
+                  console.log("student matched...");
+                  const obj = request[4];
+                  var date = new Date(request[2].toNumber());
+                  let str = '<div class="row">';
+  
+                        str += '<div class="col-md-6">';
+                        str += '<table>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Org Request Index: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[0] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Org Hash Code: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[5] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Status: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + App.CONST_REQUEST[request[3].toNumber()] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Remark: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[4] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document URL: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4><a href="' + request[6] + '">' + request[6] + '</a></h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += ' <tr>'
+                        str += ' <td>'
+                        str += '<h4>Document Description: </h4>'
+                        str += ' </td>'
+                        str += ' <td>'
+                        str += '<h4>' + request[7] + '</h4>'
+                        str += ' </td>'
+                        str += ' </tr>'
+                        str += '</table>'
+                        if(request[3].toNumber() == 1){
+                          str += '<h4 style="color: green; font-weight: bold"> Congratulations! Your request has been approved!</h4>'
+                        }
+                        if(request[3].toNumber() == 2){
+                          str += '<h4 style="color: red; font-weight: bold"> Sorry! Your request is rejected!</h4>'
+                        }
+                                                    
+                        str += "</div>";
+                        str += "</div>";
+                        str += "<hr />";
+  
+                        $("#RequestCardContainer").append(str);
+                        
+                  
+                }
+              });
+  
+              i--;
+            }
+            App.loaderShow(false);
+          });
+
+          App.contracts.EDU.deployed()
           .then(function (instance) {
               EDUInstance = instance;
               return EDUInstance.CollegeRequestIndex();
@@ -808,6 +1334,21 @@ App = {
     },
 
 
+  LoadStdRequestPage: function () {
+      console.log("is Student", App.isStudent);
+      if (!App.isStudent) {
+        return;
+      }
+  
+      let AppCount = 0;
+  
+      $("#content").load("StudentRequest.html", function () {
+        $("#sliderbarContainer").load("SliderbarContainer.html");
+        
+  
+      });
+    },
+
   RequestAdd: function () {
       var college = $("#college").val();
       var msg = $("#message").val();
@@ -880,6 +1421,65 @@ App = {
       });
   },
   
+  OrgRequestAdd: function (org, msg, doc, docdesc) {
+    
+    const RequestStat = 0;
+
+    App.loaderShow(true);
+
+    App.contracts.EDU.deployed()
+      .then(function (instance) {
+        EDUInstance = instance;
+        console.log("In request add")
+        return EDUInstance.OrganizationRequestAdd(
+          RequestStat,
+          msg,
+          org,
+          doc,
+          docdesc,
+          { from: App.account }
+        );
+      })
+      .then((reply) => {
+        console.log(reply);
+        console.log("Request Saved Successfully.");
+        App.LoadOrgRequestPage();
+      });
+  },
+
+  OrgRequestUpdate: function (ind, stat, remark, org) {
+    console.log("in request update...");
+    //return;
+    App.loaderShow(true);
+
+    App.contracts.EDU.deployed()
+      .then(function (instance) {
+        EDUInstance = instance;
+        console.log("instance");
+        return EDUInstance.organizationRequests(ind);
+      })
+      .then((reply) => {
+          console.log(reply[0], stat, remark);
+        return EDUInstance.OrganizationRequestUpdate(
+          ind,
+          stat,
+          remark,
+          org,
+          { from: App.account }
+        );
+      })
+      .then((results) => {
+        console.log(results);
+        console.log("Request updated Successfully.");
+
+        App.LoadRequestPageForOrgAdmin();
+      })
+      .catch((error) => {
+        console.log(error.message);
+        App.loaderShow(false);
+      });
+  },
+
   /** MISLENOUS FUNCTINOS */
 
   loaderShow: function (bool) {
@@ -900,3 +1500,4 @@ $(function () {
     App.init();
   });
 });
+
