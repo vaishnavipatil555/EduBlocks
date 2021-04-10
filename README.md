@@ -21,10 +21,10 @@ EduBlocks is a DApp for organisations, educational institutes and students based
 * [Installing Dependencies](#installing-dependencies)
 * [Dependencies version](#dependencies-version)
 * [Steps to run](#steps-to-run)
-* [Contributors](#contributors)
 * [Usecase Diagram](#usecase-diagram)
 * [Flow Diagram](#flow-diagram)
 * [System Design](#system-design)
+* [Contributors](#contributors)
 
 ## General Information
 
