@@ -92,6 +92,7 @@ http://localhost:3000 will open automatically in chrome
   * Add Project
   * Select truffle-config.js
   * Save Workspace
+ ![Ganache](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Ganache.jpg)
 * Truffle
 ```
 $ truffle migrate
