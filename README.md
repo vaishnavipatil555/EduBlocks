@@ -122,6 +122,7 @@ $ truffle migrate --reset
  
 ## Other resources
 [PPT](https://drive.google.com/file/d/10cr3bjG1-4JOPgth2I1oWoI7-pleHNXH/view)
+[Demo Video](https://drive.google.com/file/d/1nJZ5uygnFGxPYQnKLHQ3vFdz4X_6vBXR/view?usp=sharing)
 
 ## Contributors:
 
