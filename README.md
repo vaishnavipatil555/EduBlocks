@@ -119,6 +119,9 @@ $ truffle migrate --reset
 ## System Design
 
  ![System Design](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Diagrams/System_Design_EduBlocks.png)
+ 
+## Other resources
+[PPT](https://drive.google.com/file/d/10cr3bjG1-4JOPgth2I1oWoI7-pleHNXH/view)
 
 ## Contributors:
 
