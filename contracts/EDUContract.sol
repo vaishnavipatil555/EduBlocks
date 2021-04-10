@@ -63,6 +63,18 @@ contract EDUContract {
         string email;
     }
 
+
+    struct AllOrganization {
+        uint256 index;
+        address Id;
+        string orgname;
+        string orgaddress;
+        string email;
+    }
+
+
+
+
     struct Document {
         uint256 index;
         address institute;
@@ -87,6 +99,7 @@ contract EDUContract {
         string Alladminname;
         string Alladminaddress;
         string email;
+        uint256 adminType;
     }
 
     struct OrganizationAdmin {
@@ -98,7 +111,11 @@ contract EDUContract {
 
     mapping(address => Student) public students;
     mapping(address => College) public colleges;
+
+    mapping(uint256 => AllCollege) public AllColleges;
     mapping(address => Organization) public organizations;
+    mapping(uint256 => AllOrganization) public AllOrganizations;
+
     mapping(address => CollegeAdmin) public collegeAdministrator;
     mapping(uint256 => AllAdmin) public AllAdministrator;
     mapping(address => OrganizationAdmin) public organizationAdministartor;
@@ -116,6 +133,8 @@ contract EDUContract {
     uint256 public OrganizationRequestIndex;
     uint256 public DocumentIndex;
     uint256 public CollegeAdministratorIndex;
+    uint256 public CollegeIndex;
+    uint256 public OrganizationIndex;
     uint256 public OrganizationAdministratorIndex;
     uint256 public AdministratorIndex;
 
@@ -144,7 +163,8 @@ contract EDUContract {
         address _collegeadmin,
         string memory _collegeadminname,
         string memory _clgadminaddress,
-        string memory _email
+        string memory _email,
+        uint256 _adminType
     ) public {
         require(msg.sender == owner);
         require(!administrator[_collegeadmin]);
@@ -163,7 +183,8 @@ contract EDUContract {
             _collegeadmin,
             _collegeadminname,
             _clgadminaddress,
-            _email
+            _email,
+            _adminType
         );
         
     }
@@ -173,7 +194,8 @@ contract EDUContract {
         address _orgadmin,
         string memory _orgadminname,
         string memory _orgadminaddress,
-        string memory _email
+        string memory _email,
+        uint256 _adminType
     ) public {
         require(msg.sender == owner);
         require(!administrator[_orgadmin]);
@@ -192,7 +214,8 @@ contract EDUContract {
             _orgadmin,
             _orgadminname,
             _orgadminaddress,
-            _email
+            _email,
+            _adminType
         );
     }    
 
@@ -204,9 +227,16 @@ contract EDUContract {
     ) public {
         require(!isCollegeAdministartor[_college]);
         isCollegeAdministartor[_college] = false;
-
+        CollegeIndex++;
         isCollege[_college] = true;
         colleges[_college] = College(
+            _college,
+            _collegename,
+            _clgaddress,
+            _email
+        );
+        AllColleges[CollegeIndex] = AllCollege(
+            CollegeIndex,
             _college,
             _collegename,
             _clgaddress,
@@ -222,9 +252,17 @@ contract EDUContract {
     ) public {        
         require(!isOrganizationAdministrator[_organization]);
         isOrganizationAdministrator[_organization] = false;
-
+        OrganizationIndex++;
         isOrganization[_organization] = true;
         organizations[_organization] = Organization(
+            _organization,
+            _orgname,
+            _orgaddress,
+            _email
+        );
+
+        AllOrganizations[OrganizationIndex] = AllOrganization(
+            OrganizationIndex,
             _organization,
             _orgname,
             _orgaddress,
@@ -236,7 +274,6 @@ contract EDUContract {
         require(msg.sender == owner);
         selfdestruct(msg.sender);
     }
-    
 
     function SignupStudent(
         string memory _fullname,
@@ -415,3 +452,4 @@ contract EDUContract {
     }
 
 }
+
