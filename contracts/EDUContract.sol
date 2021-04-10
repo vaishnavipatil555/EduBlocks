@@ -27,6 +27,7 @@ contract EDUContract {
         string remark;
         address college;
         string docpath;
+        string docdesc;
     }
 
     struct OrganizationRequest {
@@ -37,6 +38,7 @@ contract EDUContract {
         string remark;
         address organization;
         string docpath;
+        string docdesc;
     }
 
     struct College {
@@ -45,7 +47,15 @@ contract EDUContract {
         string clgaddress;
         string email;
     }
-
+    
+    struct AllCollege {
+            uint256 index;
+            address Id;
+            string collegename;
+            string clgaddress;
+            string email;
+    }
+    
     struct Organization {
         address Id;
         string orgname;
@@ -71,6 +81,14 @@ contract EDUContract {
         string email;
     }
 
+    struct AllAdmin {
+        uint256 index;
+        address Id;
+        string Alladminname;
+        string Alladminaddress;
+        string email;
+    }
+
     struct OrganizationAdmin {
         address Id;
         string orgadminname;
@@ -82,6 +100,7 @@ contract EDUContract {
     mapping(address => College) public colleges;
     mapping(address => Organization) public organizations;
     mapping(address => CollegeAdmin) public collegeAdministrator;
+    mapping(uint256 => AllAdmin) public AllAdministrator;
     mapping(address => OrganizationAdmin) public organizationAdministartor;
     mapping(uint256 => CollegeRequest) public collegeRequests;
     mapping(uint256 => OrganizationRequest) public organizationRequests;
@@ -96,6 +115,9 @@ contract EDUContract {
     uint256 public CollegeRequestIndex;
     uint256 public OrganizationRequestIndex;
     uint256 public DocumentIndex;
+    uint256 public CollegeAdministratorIndex;
+    uint256 public OrganizationAdministratorIndex;
+    uint256 public AdministratorIndex;
 
     address public owner;
 
@@ -116,6 +138,7 @@ contract EDUContract {
         isCollegeAdministartor[msg.sender] = true;
     }
    
+ 
 
     function SetCollegeAdministrator( 
         address _collegeadmin,
@@ -126,7 +149,8 @@ contract EDUContract {
         require(msg.sender == owner);
         require(!administrator[_collegeadmin]);
         administrator[_collegeadmin] = false;
-
+        CollegeAdministratorIndex++;
+        AdministratorIndex++;
         isCollegeAdministartor[_collegeadmin] = true;
         collegeAdministrator[_collegeadmin] = CollegeAdmin(
             _collegeadmin,
@@ -134,7 +158,16 @@ contract EDUContract {
             _clgadminaddress,
             _email
         );
+        AllAdministrator[AdministratorIndex] = AllAdmin(
+            AdministratorIndex,
+            _collegeadmin,
+            _collegeadminname,
+            _clgadminaddress,
+            _email
+        );
+        
     }
+  
 
     function SetOrganizationAdministrator( 
         address _orgadmin,
@@ -145,9 +178,17 @@ contract EDUContract {
         require(msg.sender == owner);
         require(!administrator[_orgadmin]);
         administrator[_orgadmin] = false;
-
+        OrganizationAdministratorIndex++;
+        AdministratorIndex++;
         isOrganizationAdministrator[_orgadmin] = true;
         organizationAdministartor[_orgadmin] = OrganizationAdmin(
+            _orgadmin,
+            _orgadminname,
+            _orgadminaddress,
+            _email
+        );
+        AllAdministrator[AdministratorIndex] = AllAdmin(
+            AdministratorIndex,
             _orgadmin,
             _orgadminname,
             _orgadminaddress,
@@ -195,6 +236,7 @@ contract EDUContract {
         require(msg.sender == owner);
         selfdestruct(msg.sender);
     }
+    
 
     function SignupStudent(
         string memory _fullname,
@@ -233,11 +275,14 @@ contract EDUContract {
         students[msg.sender].email = _email;
     }
     
+   
+
     function CollegeRequestAdd(
         RequestStat _stat,
         string memory _remark,
         address _college,
-        string memory _docpath
+        string memory _docpath,
+        string memory _docdesc
     ) public {
         require(msg.sender == students[msg.sender].student);
         require(isCollege[_college] == true);
@@ -249,7 +294,8 @@ contract EDUContract {
             _stat,
             _remark,
             _college,
-            _docpath
+            _docpath,
+            _docdesc
         );
 
         emit eCollegeRequestAdd(CollegeRequestIndex, msg.sender);
@@ -285,7 +331,8 @@ contract EDUContract {
         RequestStat _stat,
         string memory _remark,
         address _organization,
-        string memory _docpath
+        string memory _docpath,
+        string memory _docdesc
     ) public {
         require(msg.sender == students[msg.sender].student);
         require(isOrganization[_organization] == true);
@@ -297,7 +344,8 @@ contract EDUContract {
             _stat,
             _remark,
             _organization,
-            _docpath
+            _docpath,
+            _docdesc
         );
 
         emit eOrganizationRequestAdd(OrganizationRequestIndex, msg.sender);
