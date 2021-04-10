@@ -1,10 +1,12 @@
-<h1 align="center">Hack36 Template Readme</h1>
+<h1 align="center">Hack36 - The Invincible Squad </h1>
 <p align="center">
 </p>
 
 <a href="https://hack36.com"> <img src="http://bit.ly/BuiltAtHack36" height=20px> </a>
 
 # EduBlocks
+
+## Introduction:
 
 ## Table of contents
 * [General Information](#general-info)
@@ -39,3 +41,12 @@ $ npm install -g truffle
 ```
 > Download Ganache from https://www.trufflesuite.com/ganache
 > Meta Mask chrome extension https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en
+
+## Contributors:
+
+Team Name: The Invincible Squad
+
+* [Vaishnavi Patil](https://github.com/vaishnavipatil555)
+* [Pradnya Navale](https://github.com/pradnyanavale200)
+* [Akanksha Mahajan](https://github.com/akankshamahajan99)
+* [Falguni Patil](https://github.com/Falguni99)
