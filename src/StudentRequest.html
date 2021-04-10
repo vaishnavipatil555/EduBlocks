@@ -1,0 +1,105 @@
+<div class="wrapper ">
+
+    <div id="sliderbarContainer" class="sidebar" data-color="purple" data-background-color="white" data-image="img/sidebar-1.jpg"></div>
+    <!-- sidebar -->
+
+
+    <div class="main-panel">
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+
+            <div class="container-fluid">
+                <div class="navbar-wrapper">
+                    <a class="navbar-brand" href="#pablo"><h1 style="color: grey; font-size: 38px;"><strong>Requests</strong></strong></h1></a>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                </button>
+
+
+
+            </div> <!-- container-fluid -->
+
+        </nav> <!-- End Navbar -->
+
+        <div class="content">
+            <div class="container-fluid">
+
+
+
+                <div id="ScheduleNewCont" class="card">
+                    <div class="card-header card-header-primary">
+                        <h3 class="card-title">Schedule New Requests</h3>
+                    </div><!-- card-header -->
+                    <script type="text/javascript">  
+                        console.log("In college request");  
+                    </script> 
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating" style="font-size:14pt; margin-top:10pt">Message:</label>
+                                            <input id="message" type="text" class="form-control">
+                                            <label class="bmd-label-floating" style="font-size:14pt; margin-top:10pt">Account Hash:</label>
+                                            <input id="college" type="text" class="form-control">
+                                            <label class="bmd-label-floating" style="font-size:14pt; margin-top:10pt">Document URL (If any):</label>
+                                            <input id="docURL" type="text" class="form-control">
+                                            <label class="bmd-label-floating" style="font-size:14pt; margin-top:10pt">Document Description (If any):</label>
+                                            <input id="docdesc" type="text" class="form-control">
+                                            <label class="bmd-label-floating" style="font-size:14pt; margin-top:10pt">Request To:</label>
+                                            <select id="requestTo" class="form-control" style="font-size:12pt;">
+                                                <option value="0" style="font-size:12pt;">College</option>
+                                                <option value="1" style="font-size:12pt;">Organization</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <form>
+                                    <button onclick="App.RequestAdd();" class="btn btn-primary pull-right">Schedule
+                                        New Requests</button>
+                                    <div class="clearfix"></div>
+                                </form>
+
+                            </div><!-- card-body -->
+                        </div>
+                    </div><!-- row -->
+                </div><!-- card -> PROFILE -->
+
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h3 class="card-title">Requests</h3>
+                    </div><!-- card-header -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="RequestCardContainer" class="card-body">                        
+
+                            </div><!-- card-body -->
+                            <div id="ClgRequestCardContainer" class="card-body">
+                            </div>
+                        </div>
+                    </div><!-- row -->
+                </div><!-- card -> PROFILE -->
+
+            </div><!-- container-fluid -->
+        </div><!-- content -->
+
+
+
+    </div> <!-- main-panel -->
+
+
+</div>
