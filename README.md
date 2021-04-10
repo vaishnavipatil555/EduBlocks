@@ -9,11 +9,15 @@
 ## Introduction:
 
 ## Table of contents
-* [General Information](#general-info)
+* [General Information](#general-information)
 * [Technologies](#technologies)
 * [Installing Dependencies](#installing-dependencies)
 * [Dependencies version](#dependencies-version)
 * [Steps to run](#steps-to-run)
+* [Contributors](#contributors)
+* [Usecase Diagram](#usecase-diagram)
+* [Flow Diagram](#flow-diagram)
+* [System Design](#system-design)
 
 ## General Information
 
@@ -92,10 +96,20 @@ $ truffle migrate --reset
   * Add network HTTP://localhost:7545 (This is where Ganache is running)
   * Import accounts from ganache
   * connect it to localhost:3000
-  * ![Metamask](https://github.com/vaishnavipatil555/DevfolioHackathon/blob/main/images/Metamask%20account%20configuration.png)
-  * ![Metamask](https://github.com/vaishnavipatil555/DevfolioHackathon/blob/main/images/Metamask%20accounts%20connection.png)
+  * ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20account%20configuration.png)
+  * ![Metamask](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Metamask%20accounts%20connection.png)
 
+## Usecase Diagram
 
+ ![Usecase Diagram](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Diagrams/Usecase_Diagram_EduBlocks.png)
+
+## Flow Diagram
+
+ ![Flow Diagram](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Diagrams/Flow_Diagram_EduBlocks.png)
+
+## System Design
+
+ ![System Design](https://github.com/vaishnavipatil555/EduBlocks/blob/main/images/Diagrams/System_Design_EduBlocks.png)
 
 ## Contributors:
 
