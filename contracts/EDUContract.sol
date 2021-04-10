@@ -107,6 +107,26 @@ contract EDUContract {
     event eOrganizationRequestAdd(uint256 indexed index, address sender);
 
     event eOrganizationRequestUpdate(uint256 indexed index, address sender);
-
+/**
+    modifier isOwner() {
+        if (msg.sender == owner) _;
+    }
+    modifier isAdministrator(address _admin) {
+        if (administrator[_admin] == true) _;
+    }
+    modifier isCollege(address _college) {
+        if (colleges[_college] == true) _;
+    }
+    modifier isOrganization(address _organization) {
+        if (organizations[_organization] == true) _;
+    }
+    modifier isCollegeAdministartor(address _admin) {
+        if (collegeAdministrator[_admin] == true) _;
+    }
+    
+    modifier isOrganizationAdministrator(address _admin) {
+        if (organizationAdministartor[_admin] == true) _;
+    }
+*/
 
 }
